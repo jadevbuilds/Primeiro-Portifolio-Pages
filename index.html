@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfólio | João Arthur</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Link para Font Awesome CDN para ícones -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body>
+  <button id="toggle-dark-mode">🌙</button>
+
+  <header>
+    <div class="perfil-container">
+      <img src="joaoperfil.jpg" alt="Foto de João Arthur" class="foto-perfil" />
+      <div class="info-perfil">
+        <h1>João Arthur</h1>
+        <h3>Desenvolvedor Front-End Júnior</h3>
+      </div>
+    </div>
+  </header>
+
+  <section class="sobre">
+    <h2>Sobre Mim</h2>
+    <p>
+      Olá sou João Arthur e tenho 19 anos, sou estudante em Desenvolvimento de Sistemas da instituição do SENAI Areias Recife PE | Developer Front-end | HTML | CSS | JavaScript | Python. Aqui no meu portifólio você encontrará meus projetos podendo acessá-los gratuitamente. Estou aberto para negócios entre em contato comigo no final da página! 🚀
+    </p>
+  </section>
+
+  <section class="projetos">
+    <h2>Meus Projetos</h2>
+    <div class="projetos-grid" id="projetosGrid">
+      <!-- Projetos adicionados via JavaScript -->
+    </div>
+  </section>
+
+  <section id="novos-projetos">
+    <h2>Novos Projetos</h2>
+    <p>Crie seu novo projeto para o portifólio, para adicionar seu novo projeto clique no botão "Adicionar"</p>
+
+    <form id="formProjeto">
+      <input type="text" id="nomeProjeto" placeholder="Nome do Projeto" required />
+      <input type="url" id="linkProjeto" placeholder="Link do Projeto" required />
+      <input type="text" id="descricaoProjeto" placeholder="Descrição do Projeto" required />
+      <button type="submit">Adicionar</button>
+    </form>
+  </section>
+
+  <section class="contato">
+    <h2>Contato 📞</h2>
+    <p>Me encontre nas redes:</p>
+    <div class="links">
+      <a href="https://github.com/jadevbuilds" target="_blank" aria-label="GitHub">
+        <i class="fab fa-github"></i> GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/joaoarthur-19d33" target="_blank" aria-label="LinkedIn">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      <a href="https://wa.me/5581999472821" target="_blank" aria-label="Whatsapp">
+        <i class="fab fa-whatsapp"></i> Whatsapp
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 João Arthur. Todos os direitos reservados.</p>
+  </footer>
+
+  <script>
+    // Dark Mode
+    const toggleButton = document.getElementById("toggle-dark-mode");
+    const body = document.body;
+
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark");
+      toggleButton.textContent = "☀️";
+    }
+
+    toggleButton.addEventListener("click", () => {
+      body.classList.toggle("dark");
+      const isDark = body.classList.contains("dark");
+      toggleButton.textContent = isDark ? "☀️" : "🌙";
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+
+    // Projetos localStorage
+    const projetosGrid = document.getElementById("projetosGrid");
+    const form = document.getElementById("formProjeto");
+
+    function salvarProjetosNoStorage(projetos) {
+      localStorage.setItem("meusProjetos", JSON.stringify(projetos));
+    }
+
+    function carregarProjetosDoStorage() {
+      const projetos = localStorage.getItem("meusProjetos");
+      return projetos ? JSON.parse(projetos) : [];
+    }
+
+    function criarCardProjeto(nome, link, descricao) {
+      const div = document.createElement("div");
+      div.classList.add("card");
+
+      div.innerHTML = `
+        <h3>${nome}</h3>
+        <p>${descricao}</p>
+        <div class="acoes">
+          <a href="${link}" target="_blank" class="btn-ver-projeto">Ver Projeto</a>
+          <button class="btn-excluir" aria-label="Excluir projeto" title="Excluir projeto">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M3 6h18v2H3V6zm2 3h14v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9zm5 3v6h2v-6H10zm4 0v6h2v-6h-2z"/>
+            </svg>
+          </button>
+        </div>
+      `;
+
+      // Botão excluir
+      const btnExcluir = div.querySelector(".btn-excluir");
+      btnExcluir.addEventListener("click", () => {
+        div.remove();
+        removerProjeto(nome, link, descricao);
+      });
+
+      return div;
+    }
+
+    function renderizarProjetos() {
+      projetosGrid.innerHTML = "";
+      const projetos = carregarProjetosDoStorage();
+
+      projetos.forEach(({ nome, link, descricao }) => {
+        const card = criarCardProjeto(nome, link, descricao);
+        projetosGrid.appendChild(card);
+      });
+    }
+
+    function adicionarProjeto(nome, link, descricao) {
+      const projetos = carregarProjetosDoStorage();
+      projetos.push({ nome, link, descricao });
+      salvarProjetosNoStorage(projetos);
+      renderizarProjetos();
+    }
+
+    function removerProjeto(nome, link, descricao) {
+      let projetos = carregarProjetosDoStorage();
+      projetos = projetos.filter(
+        p => !(p.nome === nome && p.link === link && p.descricao === descricao)
+      );
+      salvarProjetosNoStorage(projetos);
+    }
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+
+      const nome = document.getElementById("nomeProjeto").value.trim();
+      const link = document.getElementById("linkProjeto").value.trim();
+      const descricao = document.getElementById("descricaoProjeto").value.trim();
+
+      if (!nome || !link || !descricao) return;
+
+      adicionarProjeto(nome, link, descricao);
+
+      form.reset();
+    });
+
+    // Inicializa ao carregar
+    renderizarProjetos();
+  </script>
+</body>
+</html>
+
+
