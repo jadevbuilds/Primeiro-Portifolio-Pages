@@ -396,6 +396,89 @@ body.dark {
     image-rendering: auto;
 }
 
+/* Container foto */
+.foto-perfil-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+}
+
+/* Foto perfil */
+.foto-perfil {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  display: block;
+}
+
+/* Ícone padrão (sem foto) */
+.foto-sem-imagem {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+/* Botão remover foto */
+.btn-remover-foto {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(231, 76, 60, 0.8);
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  user-select: none;
+  z-index: 2;
+}
+
+.btn-remover-foto:hover {
+  background: rgba(192, 57, 43, 0.9);
+}
+
+/* Botão adicionar foto */
+.btn-adicionar-foto {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: rgba(39, 174, 96, 0.85);
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 22px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  user-select: none;
+  z-index: 2;
+}
+
+.btn-adicionar-foto:hover {
+  background: rgba(35, 155, 85, 0.95);
+}
+
+
+
 
 
 

@@ -17,14 +17,31 @@
   <button id="toggle-dark-mode">🌙</button>
 
   <header>
-    <div class="perfil-container">
-      <img src="joaoperfil.jpg" alt="Foto de João Arthur" class="foto-perfil" />
-      <div class="info-perfil">
-        <h1>João Arthur</h1>
-        <h3>Desenvolvedor Front-End Júnior</h3>
+  <div class="perfil-container">
+    <div class="foto-perfil-container">
+      <img
+        src="joaoperfil.jpg"
+        alt="Foto de João Arthur"
+        class="foto-perfil"
+        id="fotoPerfil"
+      />
+      <div class="foto-sem-imagem" style="display:none;" id="iconePadrao">
+        <!-- Ícone SVG padrão para usuário sem foto -->
+        <svg width="130" height="130" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+          <circle cx="12" cy="12" r="12" fill="#bbb"/>
+          <path fill="#fff" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zM12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
       </div>
+      <button id="btnRemoverFoto" class="btn-remover-foto" title="Remover foto">✕</button>
+      <button id="btnAdicionarFoto" class="btn-adicionar-foto" title="Adicionar foto">+</button>
+      <input type="file" id="inputFoto" accept="image/*" style="display:none" />
     </div>
-  </header>
+    <div class="info-perfil">
+      <h1>João Arthur</h1>
+      <h3>Desenvolvedor Front-End Júnior</h3>
+    </div>
+  </div>
+</header>
 
   <section class="sobre">
     <h2>Sobre Mim</h2>
@@ -170,6 +187,76 @@
 
     // Inicializa ao carregar
     renderizarProjetos();
+
+    // Função para remover foto de perfil e mostrar ícone padrão
+    const btnRemoverFoto = document.getElementById("btnRemoverFoto");
+const btnAdicionarFoto = document.getElementById("btnAdicionarFoto");
+const inputFoto = document.getElementById("inputFoto");
+const fotoPerfil = document.getElementById("fotoPerfil");
+const iconePadrao = document.getElementById("iconePadrao");
+
+// Função para salvar foto no localStorage
+function salvarFotoNoStorage(base64) {
+  localStorage.setItem("fotoPerfil", base64);
+}
+
+// Função para salvar que não tem foto
+function salvarSemFoto() {
+  localStorage.setItem("fotoPerfil", "null");
+}
+
+// Função para carregar foto do localStorage
+function carregarFotoDoStorage() {
+  const fotoSalva = localStorage.getItem("fotoPerfil");
+
+  if (fotoSalva && fotoSalva !== "null") {
+    fotoPerfil.src = fotoSalva;
+    fotoPerfil.style.display = "block";
+    iconePadrao.style.display = "none";
+    btnRemoverFoto.style.display = "flex";
+    btnAdicionarFoto.style.display = "none";
+  } else {
+    fotoPerfil.style.display = "none";
+    iconePadrao.style.display = "flex";
+    btnRemoverFoto.style.display = "none";
+    btnAdicionarFoto.style.display = "flex";
+  }
+}
+
+btnRemoverFoto.addEventListener("click", () => {
+  fotoPerfil.style.display = "none";
+  iconePadrao.style.display = "flex";
+  btnRemoverFoto.style.display = "none";
+  btnAdicionarFoto.style.display = "flex";
+
+  salvarSemFoto();
+});
+
+btnAdicionarFoto.addEventListener("click", () => {
+  inputFoto.click();
+});
+
+inputFoto.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    fotoPerfil.src = event.target.result;
+    fotoPerfil.style.display = "block";
+    iconePadrao.style.display = "none";
+    btnRemoverFoto.style.display = "flex";
+    btnAdicionarFoto.style.display = "none";
+    inputFoto.value = "";
+
+    salvarFotoNoStorage(event.target.result);
+  };
+  reader.readAsDataURL(file);
+});
+
+// Ao carregar a página, carregar a foto salva
+window.addEventListener("load", carregarFotoDoStorage);
+    // Fim da funcionalidade de foto de perfil
   </script>
 </body>
 </html>
